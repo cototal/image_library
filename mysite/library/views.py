@@ -1,8 +1,11 @@
 from django.http.response import FileResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+
+from .models import Image, ImageTag
 
 def home(request):
     return render(request, 'library/home.html')
 
-def image(request):
-    return FileResponse(open("C:\\Users\\Shaun\\Downloads\\Bicycle Blue Print Wrap image1.jpg", "rb"))
+def image_view(request, id):
+    image = get_object_or_404(Image, id=id)
+    return FileResponse(open(image.path, "rb"))

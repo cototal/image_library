@@ -6,5 +6,5 @@ app_name = 'library'
 
 urlpatterns = [
     path('', views.home, name='library_home'),
-    path('image', views.image, name='library_image')
+    path('image/<int:id>', views.image_view, name='library_image')
 ]
