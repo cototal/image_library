@@ -21,7 +21,7 @@ def tag_manager(request):
     })
 
 def by_tag(request, name):
-    images = Image.objects.filter(tags__name=name)
+    images = Image.objects.filter(tags__name=name).distinct()
     return render(request, 'library/list.html', {
         'images': images
     })
@@ -41,6 +41,8 @@ def add_remove_tags(request):
             image_tag = ImageTag.objects.get(image=image, name=json_data['name'])
         except ImageTag.DoesNotExist:
             pass
+        except ImageTag.MultipleObjectsReturned:
+            image_tag = ImageTag.objects.filter(image=image, name=json_data['name'])[:1].get()
 
         if json_data['action'] == 'remove' and image_tag is not None:
             image_tag.delete()
