@@ -2,15 +2,42 @@
 {% block title %}Image List{% endblock %}
 {% block content %}
     <h1>Image List</h1>
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-outline-dark" role="button" type="button" id="selectAllImages">Select All</button>
+        <button class="btn btn-outline-dark" role="button" type="button" id="deselectAllImages">Select None</button>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="tag">Tag</label>
+            <input class="form-control" type="text" name="tag" id="tag" />
+            <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-dark apply-tag-button" data-action="add" type="button" role="button">Add</button>
+                <button class="btn btn-outline-dark apply-tag-button" data-action="remove" type="button" role="button">Remove</button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div id="existing-tag-container"></div>
+        </div>
+    </div>
+    <form>
     <div class="row">
         {% for image in images %}
             <div class="col-sm-6 col-md-4 col-lg-2">
                 <a href="{% url 'library:image' image.id %}">
                     <img class="img-fluid" src="{% url 'library:image' image.id %}" alt="{{ image.path }}" />
                 </a>
+                <ul class="list-inline">
+                {% for tag in image.tags.all %}
+                    <li class="list-inline-item">
+                        <button role="button" type="button" class="tag-name btn btn-outline-dark btn-sm">{{ tag.name }}</button>
+                    </li>
+                {% endfor %}
+                </ul>
+                <input type="checkbox" class="image-checkbox" value="{{ image.id }}" />
             </div>
         {% endfor %}
     </div>
-    <ul>
-    </ul>
+    {% csrf_token %}
+
+    </form>
 {% endblock %}
