@@ -1,3 +1,5 @@
+db.sqlite3-journal
 db.sqlite3
 node_modules
 mysite/static/build
+__pycache__

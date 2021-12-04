@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Image List{% endblock %}
+{% block content %}
+    <h1>Image List</h1>
+    <div class="row">
+        {% for image in images %}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <a href="{% url 'library:image' image.id %}">
+                    <img class="img-fluid" src="{% url 'library:image' image.id %}" alt="{{ image.path }}" />
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <ul>
+    </ul>
+{% endblock %}
