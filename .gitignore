@@ -3,3 +3,7 @@ db.sqlite3
 node_modules
 mysite/static/build
 __pycache__
+.vscode
+
+mysite/static/thumbnails/*
+!mysite/static/thumbnails/.gitkeep

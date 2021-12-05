@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load thumbnails %}
 {% block title %}Image List{% endblock %}
 {% block content %}
     <h1>Image List</h1>
@@ -28,7 +29,7 @@
                     <input type="checkbox" class="image-checkbox" value="{{ image.id }}" />
                 </div>
                 <a href="{% url 'library:image' image.id %}">
-                    <img class="img-fluid" src="{% url 'library:image' image.id %}" alt="{{ image.path }}" />
+                    <img class="img-fluid" src="{{ image | thumbnail_path }}" alt="{{ image.path }}" />
                 </a>
                 <ul class="list-inline">
                 {% for tag in image.tags.all %}

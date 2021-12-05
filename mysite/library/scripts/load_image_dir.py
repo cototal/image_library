@@ -1,6 +1,14 @@
 import glob
 import os
 
+from shutil import copyfile
+from PIL import UnidentifiedImageError, ImageFile, Image as PILImage
+
+# Required to load big files
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+from django.conf import settings
+
 from ..models import Image, ImageTag
 from ..utils import string_utils
 
@@ -41,3 +49,27 @@ def parameterize_all(tags):
     for tag in tags:
         tag.name = string_utils.parameterize(tag.name)
         tag.save()
+
+def make_thumbnails():
+    images = Image.objects.all()
+    img_exts = ['png', 'jpg', 'jpeg', 'bmp', 'webp']
+    for image in images:
+        ext = image.path.split('.')[-1]
+        if ext.lower() not in img_exts:
+            new_name = thumbnail_name(image.id, ext)
+            if not os.path.exists(new_name):
+                copyfile(image.path, new_name)
+            continue
+
+        new_name = thumbnail_name(image.id, 'webp')
+        if os.path.exists(new_name):
+            continue
+        try:
+            file = PILImage.open(image.path)
+            file.thumbnail((200, 200))
+            file.save(new_name)
+        except UnidentifiedImageError:
+            pass
+
+def thumbnail_name(id, ext):
+    return os.path.join(settings.BASE_DIR, 'static', 'thumbnails', f'{id}.{ext}')
