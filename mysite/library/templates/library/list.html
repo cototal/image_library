@@ -22,7 +22,11 @@
     <form>
     <div class="row">
         {% for image in images %}
-            <div class="col-sm-6 col-md-4 col-lg-2">
+            <div class="col-sm-6 col-md-4 col-lg-2 mt-4">
+                <div>
+                    <button type="button" role="button" class="btn btn-outline-primary w-100 image-select-button" data-value="{{ image.id }}">Select</button>
+                    <input type="checkbox" class="image-checkbox" value="{{ image.id }}" />
+                </div>
                 <a href="{% url 'library:image' image.id %}">
                     <img class="img-fluid" src="{% url 'library:image' image.id %}" alt="{{ image.path }}" />
                 </a>
@@ -33,7 +37,6 @@
                     </li>
                 {% endfor %}
                 </ul>
-                <input type="checkbox" class="image-checkbox" value="{{ image.id }}" />
             </div>
         {% endfor %}
     </div>

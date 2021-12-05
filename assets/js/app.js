@@ -3,9 +3,27 @@ import "bootstrap";
 
 import '../css/app.scss';
 
+/**
+ * target - jQuery element
+ * state - boolean
+ */
+function toggleButtonView(target, state) {
+    if (state) {
+        target.removeClass("btn-outline-primary");
+        target.addClass("btn-primary");
+        target.text("Selected");
+    } else {
+        target.removeClass("btn-primary");
+        target.addClass("btn-outline-primary");
+        target.text("Select");
+    }
+}
+
 $(() => {
     const existingTagContainer = $("#existing-tag-container");
     const tagInput = $("#tag");
+    const imageSelectButtons = $(".image-select-button");
+    const imageCheckboxes = $(".image-checkbox");
     if (existingTagContainer.length > 0) {
         const readyTags = async () => {
             const tagResp = await $.get("/tag-list");
@@ -27,14 +45,30 @@ $(() => {
     $(document).on("click", ".existing-tag", evt => {
         tagInput.val($(evt.target).text());
     });
+
+    imageCheckboxes.hide();
     $("#selectAllImages").on("click", () => {
-        $(".image-checkbox").attr("checked", true);
+        imageCheckboxes.attr("checked", true);
+        toggleButtonView(imageSelectButtons, true);
     });
     $("#deselectAllImages").on("click", () => {
-        $(".image-checkbox").attr("checked", false);
+        imageCheckboxes.attr("checked", false);
+        toggleButtonView(imageSelectButtons, false);
     });
     $(".tag-name").on("click", evt => {
         tagInput.val($(evt.target).text());
+    });
+    imageSelectButtons.on("click", evt => {
+        const target = $(evt.target);
+        const checkbox = $(target.closest("div").find("input")[0]);
+        const checked = checkbox.attr("checked");
+        if (checked) {
+            checkbox.attr('checked', false);
+            toggleButtonView(target, false);
+        } else {
+            checkbox.attr('checked', true);
+            toggleButtonView(target, true);
+        }
     });
     $(".apply-tag-button").on("click", async evt => {
         const action = $(evt.target).data("action");
